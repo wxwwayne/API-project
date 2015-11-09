@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '5.0.1'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
@@ -26,6 +26,12 @@ gem 'active_model_serializers'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
 
+# Sabisu gems
+gem 'sabisu_rails', github: "IcaliaLabs/sabisu-rails"
+gem 'compass-rails', '2.0.4'
+gem 'furatto'
+gem 'font-awesome-rails'
+gem 'simple_form'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -41,7 +47,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'rspec-rails', '~> 2.14'
+  gem 'rspec-rails', '~> 3.1'
   gem 'factory_girl_rails'
   gem 'ffaker'
   gem 'shoulda-matchers'
