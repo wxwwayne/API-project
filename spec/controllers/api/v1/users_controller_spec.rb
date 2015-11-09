@@ -14,7 +14,7 @@ describe Api::V1::UsersController do
       expect(user_response[:email]).to eq(@user.email)
     end
 
-    it { should respond_with 200 }
+    it { is_expected.to respond_with 200 }
   end
 
   describe "POST #create" do
@@ -28,7 +28,7 @@ describe Api::V1::UsersController do
         user_response = json_response
         expect(user_response[:email]).to eq(@user[:email])
       end
-      it { should respond_with 201 }
+      it { is_expected.to respond_with 201 }
     end
 
     context 'with invalid attributes' do
@@ -46,7 +46,7 @@ describe Api::V1::UsersController do
         expect(user_response[:errors][:email]).to include "can't be blank"
       end
 
-      it { should respond_with 422 }
+      it { is_expected.to respond_with 422 }
     end
   end
 
@@ -62,7 +62,7 @@ describe Api::V1::UsersController do
         user_response = json_response
         expect(user_response[:email]).to eq(@new_attributes[:email])
       end
-      it { should respond_with 200 }
+      it { is_expected.to respond_with 200 }
     end
 
     context 'with invalid attributes' do
@@ -76,7 +76,7 @@ describe Api::V1::UsersController do
         expect(user_response).to have_key(:errors)
         expect(user_response[:errors][:email]).to include("can't be blank")
       end
-      it { should respond_with 422 }
+      it { is_expected.to respond_with 422 }
     end
   end
 
@@ -86,6 +86,6 @@ describe Api::V1::UsersController do
       delete :destroy, id: @user
     end
 
-    it { should respond_with 204 }
+    it { is_expected.to respond_with 204 }
   end
 end
