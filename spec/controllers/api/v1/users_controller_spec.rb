@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Api::V1::UsersController do
-  # before(:each) { request.headers['Accept'] = "application/vnd.marketplace.v1, #{Mime::JSON}" }
-  # before(:each) { request.headers['Content-Type'] = Mime::JSON.to_s }
   describe "GET #show" do
     before(:each) do
       @user = create(:user)
@@ -51,9 +49,12 @@ describe Api::V1::UsersController do
   end
 
   describe "PUT #update" do
+    before :each do
+      @user = create(:user)
+      api_authorization_header(@user.auth_token)
+    end
     context "with valid attributes" do
       before :each do
-        @user = create(:user)
         @new_attributes = attributes_for(:user)
         put :update, id: @user, user: @new_attributes
       end
@@ -67,7 +68,6 @@ describe Api::V1::UsersController do
 
     context 'with invalid attributes' do
       before :each do
-        @user = create(:user)
         @new_attributes = attributes_for(:invalid_user)
         put :update, id: @user, user: @new_attributes
       end
@@ -83,6 +83,7 @@ describe Api::V1::UsersController do
   describe "DELETE #destroy" do
     before :each do
       @user = create(:user)
+      api_authorization_header(@user.auth_token)
       delete :destroy, id: @user
     end
 
