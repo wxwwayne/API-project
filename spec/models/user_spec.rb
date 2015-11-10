@@ -15,6 +15,7 @@ describe User do
   specify { is_expected.to validate_uniqueness_of :auth_token }
   specify { is_expected.to validate_confirmation_of :password }
   specify { is_expected.to allow_value('what@ever.com').for(:email) }
+  it { should have_many(:products) }
 
   describe "#generate auth_token" do
     it "generates a unique token" do
@@ -28,6 +29,21 @@ describe User do
       user.generate_authentication_token!
       expect(user.auth_token).not_to eq(one_user.auth_token)
     end
+  end
 
+  describe "#products association " do
+    before do
+      user.save
+      3.times do
+        create(:product, user: user)
+      end
+    end
+    it "destroys associated products while user destroyed" do
+      products = user.products
+      user.destroy
+      products.each do |product|
+        expect(Product.find(product.id)).to raise_error ActiveRecord::RecordNotFound
+      end
+    end
   end
 end
