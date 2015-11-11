@@ -8,11 +8,37 @@ describe Api::V1::UsersController do
     end
 
     it "returns a hash of user information" do
-      user_response = json_response
+      user_response = json_response[:user]
       expect(user_response[:email]).to eq(@user.email)
     end
 
+    it "has the products ids as the embeded object" do
+      user_response = json_response[:user]
+      expect(user_response[:product_ids]).to eq []
+    end
+
     it { is_expected.to respond_with 200 }
+  end
+
+
+  describe "GET #index" do
+    before :each do
+      4.times { create(:user) }
+      get :index
+    end
+    it "returns the records from database" do
+      product_response = json_response[:users]
+      expect(product_response.count).to eq 4
+    end
+
+    it "has product ids as embeded object" do
+      user_response = json_response[:users]
+      user_response.each do |user_response|
+        expect(user_response[:product_ids]).to eq []
+      end
+    end
+
+    it { should respond_with 200 }
   end
 
   describe "POST #create" do
@@ -23,7 +49,7 @@ describe Api::V1::UsersController do
       end
 
       it "renders the user just created" do
-        user_response = json_response
+        user_response = json_response[:user]
         expect(user_response[:email]).to eq(@user[:email])
       end
       it { is_expected.to respond_with 201 }
@@ -60,7 +86,7 @@ describe Api::V1::UsersController do
       end
 
       it "renders the user just updated" do
-        user_response = json_response
+        user_response = json_response[:user]
         expect(user_response[:email]).to eq(@new_attributes[:email])
       end
       it { is_expected.to respond_with 200 }

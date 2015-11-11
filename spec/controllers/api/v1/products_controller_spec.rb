@@ -7,22 +7,69 @@ describe Api::V1::ProductsController, type: :controller do
       get :show, id: @product
     end
     it "returns a hash of the information" do
-      product_response = json_response
-      expect(json_response[:title]).to eq(@product.title)
+      product_response = json_response[:product]
+      expect(product_response[:title]).to eq(@product.title)
     end
+
+    it "has the user as a embeded object" do
+      product_response = json_response[:product]
+      expect(product_response[:user][:email]).to eq(@product.user.email)
+    end
+
     it { should respond_with 200 }
   end
 
   describe "GET #index" do
     before :each do
       4.times { create(:product) }
-      get :index
     end
-    it "returns the records from database" do
-      product_response = json_response
-      expect(product_response[:products].count).to eq 4
+
+    context 'when not receiving product_ids parameters' do
+      before :each do
+        get :index
+      end
+      it "returns the records from database" do
+        product_response = json_response[:products]
+        expect(product_response.count).to eq 4
+      end
+
+      it "returns the user in each product" do
+        product_response = json_response[:products]
+        product_response.each do |product_response|
+          expect(product_response[:user]).to be_present
+        end
+      end
+
+      it { should respond_with 200 }
     end
-    it { should respond_with 200 }
+
+    context 'when receiving product_ids parameters' do
+      before :each do
+        @user = create(:user)
+        4.times { create(:product, user: @user) }
+        get :index, product_ids: @user.product_ids
+      end
+      it "returns the products that belongs to the @user" do
+        product_response = json_response[:products]
+        product_response.each do |product_response|
+          expect(product_response[:user][:email]).to eq(@user.email)
+        end
+      end
+    end
+
+    context 'when receive other search params' do
+      before :each do
+        @user = create(:user)
+        @product = create(:product, title: "goodstaff", user: @user)
+        4.times { create(:product, user: @user) }
+        get :index, keyword: @product.title
+      end
+
+      it "returns the product that matches the title" do
+        product_response = json_response[:products]
+        expect(product_response[0][:title]).to eq @product.title
+      end
+    end
   end
 
   describe "POST #create" do
@@ -35,8 +82,8 @@ describe Api::V1::ProductsController, type: :controller do
       end
 
       it "renders the product just created" do
-        product_response = json_response
-        expect(json_response[:title]).to eq(product[:title])
+        product_response = json_response[:product]
+        expect(product_response[:title]).to eq(product[:title])
       end
       it { should respond_with 201 }
     end
@@ -71,7 +118,7 @@ describe Api::V1::ProductsController, type: :controller do
       end
 
       it "renders json of product just updated" do
-        product_response = json_response
+        product_response = json_response[:product]
         expect(product_response[:title]).to eq(new_attributes[:title])
       end
       it { should respond_with 200 }
