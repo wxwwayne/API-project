@@ -3,7 +3,7 @@ require "spec_helper"
 describe Product do
   let(:product) { build(:product) }
   subject { product }
-
+  #Product model validation
   it { should respond_to(:title) }
   it { should respond_to(:price) }
   it { should respond_to(:published) }
@@ -15,6 +15,11 @@ describe Product do
   it { should validate_numericality_of(:price).is_greater_than_or_equal_to(0) }
   it { should belong_to(:user) }
 
+  #product placement association test
+  it { should have_many :placements }
+  it { should have_many(:orders).through(:placements) }
+
+  #filter test
   describe ".filter_by_title" do
     before :each do
       @product1 = create(:product, title: "A plasma TV")
@@ -53,7 +58,7 @@ describe Product do
       expect(Product.recent).to match_array [@product4,@product3,@product2,@product1]
     end
   end
-
+  #search test
   describe ".search" do
     before(:each) do
       @product1 = create(:product, price: 100, title: "Plasma tv")

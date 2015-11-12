@@ -15,7 +15,10 @@ describe User do
   specify { is_expected.to validate_uniqueness_of :auth_token }
   specify { is_expected.to validate_confirmation_of :password }
   specify { is_expected.to allow_value('what@ever.com').for(:email) }
+  #user/product user/order association
   it { should have_many(:products) }
+  it { should have_many(:orders) }
+
 
   describe "#generate auth_token" do
     it "generates a unique token" do
