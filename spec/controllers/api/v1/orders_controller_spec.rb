@@ -18,4 +18,45 @@ describe Api::V1::OrdersController do
 
     it { should respond_with 200 }
   end
+
+  describe "GET #show" do
+    before :each do
+      user = create(:user)
+      api_authorization_header user.auth_token
+      @product = create(:product)
+      @order = create(:order, user: user, product_ids: [@product.id])
+      get :show, user_id: user, id: @order
+    end
+    it "returns the order in json format" do
+      order_response = json_response[:order]
+      expect(order_response[:id]).to eq(@order.id)
+    end
+    it { should respond_with 200 }
+
+    it "returns the total of the order" do
+      order_response = json_response[:order]
+      expect(order_response[:total]).to eq(@product.price.to_s)
+    end
+    it "returns the products in the order" do
+      order_response = json_response[:order]
+      expect(order_response[:products].count).to be 1
+    end
+  end
+
+  describe "POST #create" do
+    before :each do
+      user = create(:user)
+      api_authorization_header user.auth_token
+      product_1 = create(:product)
+      product_2 = create(:product)
+      order_params = { product_ids: [product_1.id, product_2.id] }
+      post :create, user_id: user, order: order_params
+    end
+    it "returns the order just created" do
+      order_response = json_response[:order]
+      expect(order_response[:id]).to be_present
+    end
+
+    it { should respond_with 201 }
+  end
 end
