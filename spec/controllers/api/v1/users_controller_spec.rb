@@ -27,8 +27,8 @@ describe Api::V1::UsersController do
       get :index
     end
     it "returns the records from database" do
-      product_response = json_response[:users]
-      expect(product_response.count).to eq 4
+      user_response = json_response[:users]
+      expect(user_response.count).to eq 4
     end
 
     it "has product ids as embeded object" do
