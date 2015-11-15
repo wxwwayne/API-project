@@ -4,6 +4,7 @@ FactoryGirl.define do
     price { rand()*100 }
     published false
     user
+    quantity 5
     factory :invalid_product do
       price "one hundred"
     end
