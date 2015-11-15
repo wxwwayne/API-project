@@ -4,6 +4,8 @@
 
 <ul>
   <% @order.products.each do |product| %>
-    <li><%= product.title %> - <%= number_to_currency product.price %></li>
+    <li><%= product.title %> - <%= @order.placements.find_by(product_id: product.id).quantity %> - <%= number_to_currency product.price %></li>
   <% end %>
 </ul>
+
+<p>Your order total is <%= number_to_currency @order.total %> </p>

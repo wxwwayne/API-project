@@ -16,6 +16,13 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # To send email in development environment
+  config.action_mailer.preview_path = 'spec/mailers/previews'
+  config.action_mailer.delivery_method = :test
+  # config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  host = "http://localhost:3000/"
+  config.action_mailer.default_url_options = { :host => host }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

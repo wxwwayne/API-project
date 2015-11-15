@@ -40,6 +40,8 @@ describe Api::V1::ProductsController, type: :controller do
         end
       end
 
+      it_behaves_like "paginated list"
+
       it { should respond_with 200 }
     end
 
@@ -51,6 +53,8 @@ describe Api::V1::ProductsController, type: :controller do
       end
       it "returns the products that belongs to the @user" do
         product_response = json_response[:products]
+        # puts product_response
+        expect(product_response.count).to eq(4)
         product_response.each do |product_response|
           expect(product_response[:user][:email]).to eq(@user.email)
         end

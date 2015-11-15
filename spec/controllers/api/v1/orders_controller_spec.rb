@@ -16,6 +16,8 @@ describe Api::V1::OrdersController do
       expect(order_response.count).to eq(4)
     end
 
+    it_behaves_like "paginated list"
+
     it { should respond_with 200 }
   end
 
